@@ -1,0 +1,30 @@
+[2023 05 26]
+
+以下の機能を持つscheduler
+    学習率が0スタート、target値までtotal_epochかけて線形に上昇、その後は好きなschedulerを用いて変化
+
+<< インスタンスの仕様 >>
+    変数名 = GradualWarmupScheduler(
+        optim, multiplier, total_epoch, after_scheduler,
+    )
+        optim: 対象のoptimizer
+        multiplier: 乗算値、1以上がマスト
+            target値 = optimizerでセットした初期学習率 x multiplier
+        total_epoch: 前述したtarget値までかかるエポック数
+        after_scheduler: target値までいった後の挙動を設定
+
+<< 使い方 >>
+    run.pyを見ろ
+
+<< MPRNetのハイパーパラメータ >>
+    学習率の初期値: 2e-4
+    multiplier: 1
+    total_epoch: 3
+    after_scheduler: optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max, eta_min,
+        optimizer, opt.OPTIM.NUM_EPOCHS-warmup_epochs, eta_min=opt.OPTIM.LR_MIN
+    )
+        optimizer: 対象のoptimizer
+        T_max: epochs-3（250-3）
+        eta_min: 1e-6
+
